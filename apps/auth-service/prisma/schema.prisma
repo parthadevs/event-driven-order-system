@@ -1,0 +1,279 @@
+// auth-service/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+// ============================================================
+// USER
+// ============================================================
+
+model User {
+  id              String      @id @default(uuid())
+
+  email           String      @unique
+  passwordHash    String?
+
+  firstName       String?
+  lastName        String?
+
+  role            UserRole    @default(CUSTOMER)
+  status          UserStatus  @default(ACTIVE)
+  emailVerifiedAt DateTime?
+  failedLoginAttempts Int       @default(0)
+  lockedUntil         DateTime?
+
+  lastLoginAt         DateTime?
+  lastLoginIp         String?
+  passwordChangedAt   DateTime?
+
+  authSessions        AuthSession[]
+  passwordResets      PasswordResetToken[]
+  emailVerifications  EmailVerificationToken[]
+  oauthAccounts       OAuthAccount[]
+  authEvents          AuthEvent[]
+
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+
+  @@index([status])
+  @@index([role])
+  @@index([createdAt])
+}
+
+
+// ============================================================
+// AUTHENTICATION SESSIONS
+// ============================================================
+//
+// AuthSession represents a user's authenticated session.
+//
+// The tokenHash stores ONLY the SHA-256 hash of the refresh
+// token. Never store the raw refresh token.
+//
+// AuthSession also handles refresh-token rotation and
+// token-family based reuse detection.
+// ============================================================
+
+model AuthSession {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId],references: [id],onDelete: Cascade)
+  tokenHash String   @unique
+  family    String
+  replacedTokenHash String?
+  revokedAt         DateTime?
+  revocationReason  SessionRevocationReason?
+  expiresAt         DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+
+  @@index([userId])
+  @@index([family])
+  @@index([expiresAt])
+  @@index([revokedAt])
+}
+
+
+// ============================================================
+// PASSWORD RESET
+// ============================================================
+
+model PasswordResetToken {
+  id          String    @id @default(uuid())
+
+  userId      String
+  user        User      @relation(fields: [userId],references: [id],onDelete: Cascade)
+
+  tokenHash   String    @unique
+
+  expiresAt   DateTime
+  usedAt      DateTime?
+
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+
+// ============================================================
+// EMAIL VERIFICATION
+// ============================================================
+
+model EmailVerificationToken {
+  id          String    @id @default(uuid())
+
+  userId      String
+  user        User      @relation(fields: [userId],references: [id],onDelete: Cascade)
+  tokenHash   String    @unique
+
+  expiresAt   DateTime
+  usedAt      DateTime?
+
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+
+// ============================================================
+// OAUTH ACCOUNTS
+// ============================================================
+
+model OAuthAccount {
+  id                String        @id @default(uuid())
+
+  userId            String
+  user              User          @relation(fields: [userId],references: [id],onDelete: Cascade)
+
+  provider          OAuthProvider
+  providerAccountId String
+
+  accessToken       String?
+  refreshToken      String?
+  expiresAt         DateTime?
+
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@index([provider])
+}
+
+
+// ============================================================
+// AUTHENTICATION / SECURITY EVENTS
+// ============================================================
+//
+// Immutable audit/security events.
+// Do not update these records during normal application flow.
+// ============================================================
+
+model AuthEvent {
+  id          String        @id @default(uuid())
+  userId      String?
+  user        User?         @relation(fields: [userId],references: [id],onDelete: SetNull)
+  type        AuthEventType
+  ipAddress   String?
+  userAgent   String?
+
+  metadata    Json?
+  createdAt   DateTime      @default(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+  SUPPORT
+}
+
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+
+// ============================================================
+// AUTH SESSION REVOCATION REASONS
+// ============================================================
+
+enum SessionRevocationReason {
+  LOGOUT
+  ROTATED
+  PASSWORD_CHANGED
+  SECURITY_BREACH
+  ADMIN_REVOKED
+  USER_REVOKED
+  EXPIRED
+  TOKEN_REUSE_DETECTED
+  ACCOUNT_SUSPENDED
+}
+
+
+// ============================================================
+// OAUTH PROVIDERS
+// ============================================================
+
+enum OAuthProvider {
+  GOOGLE
+  GITHUB
+  FACEBOOK
+}
+
+
+// ============================================================
+// AUTHENTICATION EVENTS
+// ============================================================
+
+enum AuthEventType {
+  // ----------------------------------------------------------
+  // Login
+  // ----------------------------------------------------------
+
+  LOGIN_SUCCESS
+  LOGIN_FAILED
+
+  // ----------------------------------------------------------
+  // Logout / Sessions
+  // ----------------------------------------------------------
+
+  LOGOUT
+  LOGOUT_ALL
+
+  SESSION_CREATED
+  SESSION_ROTATED
+  SESSION_REVOKED
+  SESSION_REUSE_DETECTED
+
+  // ----------------------------------------------------------
+  // Password
+  // ----------------------------------------------------------
+
+  PASSWORD_CHANGED
+  PASSWORD_RESET_REQUESTED
+  PASSWORD_RESET_COMPLETED
+
+  // ----------------------------------------------------------
+  // Email verification
+  // ----------------------------------------------------------
+
+  EMAIL_VERIFICATION_REQUESTED
+  EMAIL_VERIFIED
+
+  // ----------------------------------------------------------
+  // Account
+  // ----------------------------------------------------------
+
+  ACCOUNT_CREATED
+  ACCOUNT_SUSPENDED
+  ACCOUNT_REACTIVATED
+
+  // ----------------------------------------------------------
+  // OAuth
+  // ----------------------------------------------------------
+
+  OAUTH_LOGIN
+  OAUTH_ACCOUNT_LINKED
+  OAUTH_ACCOUNT_UNLINKED
+}
