@@ -17,7 +17,7 @@ export class AuthClient {
     async register(data: unknown) {
         const response = await firstValueFrom(
             this.httpService.post(
-                `${this.configService.get('AUTH_SERVICE_URL')}/users`,
+                `${this.configService.get('AUTH_SERVICE_URL')}/auth/register`,
                 data,
             ),
         );

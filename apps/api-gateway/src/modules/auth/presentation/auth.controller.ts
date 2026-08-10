@@ -7,6 +7,12 @@ export class AuthController {
         private readonly authClient: AuthClient,
     ) { }
 
+    @Post('register')
+    async register(@Body() body: any) {
+        const response = await this.authClient.register(body);
+        return response.data;
+    }
+
     @Post('login')
     async login(@Body() body: any) {
         const response = await this.authClient.login(body);

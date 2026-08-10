@@ -12,8 +12,8 @@ export class JwtTokenService implements JwtService {
     ) { }
 
     async generateToken(payload: JwtPayload, options?: TokenGenerationOptions): Promise<string> {
-        const secret = options?.secret || this.configService.get<string>('JWT_SECRET');
-        const expiresIn = options?.expiresIn || this.configService.get<string>('JWT_EXPIRATION');
+        const secret = options?.secret || this.configService.get<string>('API_GATEWAY_JWT_SECRET');
+        const expiresIn = options?.expiresIn || this.configService.get<string>('API_GATEWAY_JWT_EXPIRATION');
 
         return this.nestJwtService.signAsync(payload, {
             secret,
@@ -23,7 +23,7 @@ export class JwtTokenService implements JwtService {
 
     async verifyToken<T extends JwtPayload = JwtPayload>(token: string, secret?: string): Promise<T> {
         try {
-            const verifySecret = secret || this.configService.get<string>('JWT_SECRET');
+            const verifySecret = secret || this.configService.get<string>('API_GATEWAY_JWT_SECRET');
             return await this.nestJwtService.verifyAsync<T>(token, {
                 secret: verifySecret,
             });

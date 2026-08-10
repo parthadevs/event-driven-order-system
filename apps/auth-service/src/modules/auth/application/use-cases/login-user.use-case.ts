@@ -7,7 +7,11 @@ export class LoginUserUseCase {
 
 
     async execute(input: any) {
-        this.log.log(`Request: Login User`);
-        return;
+        return {
+            success: true,
+            code: 200,
+            message: "User logged in successfully",
+            data: input
+        };
     }
 }
