@@ -1,17 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { UserRepository } from "../../../users/domain/repositories/user.repository";
-import { AuthSessionRepository } from "../../domain/repositories/auth-session.repository";
+import { Logger } from "@nestjs/common";
 
 @Injectable()
 export class LoginUserUseCase {
-    constructor(
-        private readonly userRepository: UserRepository,
-        private readonly authSessionRepository: AuthSessionRepository,
-        // private readonly passwordHasher: PasswordHasher,
-        // private readonly jwtService: JwtService,
-    ) { }
+    private readonly log = new Logger(LoginUserUseCase.name)
+
 
     async execute(input: any) {
-        throw new Error("Method not implemented.");
+        this.log.log(`Request: Login User`);
+        return;
     }
 }

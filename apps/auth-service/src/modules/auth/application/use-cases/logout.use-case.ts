@@ -1,13 +1,11 @@
-import { Injectable } from "@nestjs/common";
-import { AuthSessionRepository } from "../../domain/repositories/auth-session.repository";
+import { Injectable, Logger } from "@nestjs/common";
 
 @Injectable()
 export class LogoutUseCase {
-    constructor(
-        private readonly authSessionRepository: AuthSessionRepository,
-    ) { }
+    private readonly log = new Logger(LogoutUseCase.name)
 
     async execute(input: any) {
-        throw new Error("Method not implemented.");
+        this.log.log(`Request: Logout`);
+        return;
     }
 }

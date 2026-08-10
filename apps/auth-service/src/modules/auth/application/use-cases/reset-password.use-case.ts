@@ -1,15 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import { UserRepository } from "../../../users/domain/repositories/user.repository";
-import { AuthSessionRepository } from "../../domain/repositories/auth-session.repository";
+import { Logger, Injectable } from "@nestjs/common";
 
 @Injectable()
 export class ResetPasswordUseCase {
-    constructor(
-        private readonly userRepository: UserRepository,
-        private readonly authSessionRepository: AuthSessionRepository,
-    ) { }
+    private readonly log = new Logger(ResetPasswordUseCase.name)
+
 
     async execute(input: any) {
-        throw new Error("Method not implemented.");
+        this.log.log(`Request: Reset Password`);
+        return;
     }
 }

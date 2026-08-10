@@ -1,15 +1,11 @@
-import { Injectable } from "@nestjs/common";
-import { UserRepository } from "../../../users/domain/repositories/user.repository";
-import { EmailVerificationTokenRepository } from "../../domain/repositories/email-verification-token.repository";
+import { Logger, Injectable } from "@nestjs/common";
 
 @Injectable()
 export class VerifyEmailUseCase {
-    constructor(
-        private readonly userRepository: UserRepository,
-        private readonly emailVerificationTokenRepository: EmailVerificationTokenRepository,
-    ) { }
+    private readonly log = new Logger(VerifyEmailUseCase.name)
 
     async execute(input: any) {
-        throw new Error("Method not implemented.");
+        this.log.log(`Request: Verify Email`);
+        return;
     }
 }

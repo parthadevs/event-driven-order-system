@@ -10,8 +10,10 @@ import { VerifyEmailUseCase } from '../../application/use-cases/verify-email.use
 import { VerifyEmailDto } from '../../application/dto/verify-email.dto';
 import { ForgotPasswordDto } from '../../application/dto/forgot-password.dto';
 import { ResetPasswordDto } from '../../application/dto/reset-password.dto';
+import { RegisterDto } from '../../application/dto/register.dto';
+import { CreateUserUseCase } from '../../application/use-cases/create-user.use-case';
 
-@Controller()
+@Controller("auth")
 export class AuthServiceController {
 
   constructor(
@@ -21,21 +23,23 @@ export class AuthServiceController {
     private readonly resetPasswordUseCase: ResetPasswordUseCase,
     private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
     private readonly verifyEmailUseCase: VerifyEmailUseCase,
+    private readonly registerUserUseCase: CreateUserUseCase,
   ) { }
 
-  @Post('verify-email')
-  async verifyEmail(@Body() verifyEmailDto: VerifyEmailDto) {
-    return this.verifyEmailUseCase.execute(verifyEmailDto);
-  }
+  // AUTH SERVICE
 
-  @Post('forgot-password')
-  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
-    return this.forgotPasswordUseCase.execute(forgotPasswordDto);
-  }
+  // POST /auth/register
+  // POST /auth/login
+  // POST /auth/refresh
+  // POST /auth/logout
 
-  @Post('reset-password')
-  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
-    return this.resetPasswordUseCase.execute(resetPasswordDto);
+  // POST /auth/verify-email
+  // POST /auth/forgot-password
+  // POST /auth/reset-password
+
+  @Post('register')
+  async register(@Body() registerUserDto: RegisterDto) {
+    return this.registerUserUseCase.execute(registerUserDto);
   }
 
   @Post('login')
@@ -52,6 +56,22 @@ export class AuthServiceController {
   async logout(@Body() refreshTokenDto: RefreshTokenDto) {
     return this.logoutUserUseCase.execute(refreshTokenDto);
   }
+
+  @Post('verify-email')
+  async verifyEmail(@Body() verifyEmailDto: VerifyEmailDto) {
+    return this.verifyEmailUseCase.execute(verifyEmailDto);
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    return this.forgotPasswordUseCase.execute(forgotPasswordDto);
+  }
+
+  @Post('reset-password')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    return this.resetPasswordUseCase.execute(resetPasswordDto);
+  }
+
 
   // @Get('me')
   // @UseGuards(AuthGuard('jwt'))

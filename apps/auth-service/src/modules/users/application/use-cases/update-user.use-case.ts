@@ -1,13 +1,11 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaUserRepository } from "../../infrastructure/persistence/prisma-user.repository";
+import { Injectable, Logger } from "@nestjs/common";
 
 @Injectable()
 export class UpdateUserUseCase {
-    constructor(
-        private readonly userRepository: PrismaUserRepository,
-    ) { }
+    private readonly log = new Logger(UpdateUserUseCase.name)
 
-    async execute(input: any) {
-        throw new Error("Method not implemented.");
+    async execute(id: string, input: any) {
+        this.log.log(`Request: Update User ${id}`);
+        return;
     }
 }
