@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/api/products"
+method: GET
+headers:
+  Authorization: Bearer {{accessToken}}
+order: 5000

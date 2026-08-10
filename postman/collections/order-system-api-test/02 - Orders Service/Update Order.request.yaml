@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/orders/{{orderId}}"
+method: PATCH
+headers:
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "status": "CONFIRMED"
+    }
+order: 4000

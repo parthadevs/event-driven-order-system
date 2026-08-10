@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/payments/{{paymentId}}/refund"
+method: POST
+headers:
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "reason": "Customer request"
+    }
+order: 4000

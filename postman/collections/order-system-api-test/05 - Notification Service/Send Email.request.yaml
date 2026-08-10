@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{baseUrl}}/notifications/email"
+method: POST
+headers:
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "to": "partha@example.com",
+      "subject": "Test Notification",
+      "message": "This is a test notification."
+    }
+order: 1000

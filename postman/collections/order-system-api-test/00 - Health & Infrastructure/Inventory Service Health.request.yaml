@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/{{inventoryServiceUrl}}/health"
+method: GET
+order: 4000

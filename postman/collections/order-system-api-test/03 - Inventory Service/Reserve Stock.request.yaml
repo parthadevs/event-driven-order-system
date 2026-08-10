@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/products/{{productId}}/reserve"
+method: POST
+headers:
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "quantity": 1
+    }
+order: 5000

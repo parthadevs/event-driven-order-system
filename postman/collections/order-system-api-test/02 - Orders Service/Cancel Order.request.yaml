@@ -1,0 +1,6 @@
+$kind: http-request
+url: "{{baseUrl}}/orders/{{orderId}}/cancel"
+method: POST
+headers:
+  Authorization: Bearer {{accessToken}}
+order: 5000

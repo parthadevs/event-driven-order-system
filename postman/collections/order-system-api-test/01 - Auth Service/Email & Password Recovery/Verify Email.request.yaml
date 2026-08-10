@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/auth/verify-email"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "token": "{{verificationToken}}"
+    }
+order: 1000

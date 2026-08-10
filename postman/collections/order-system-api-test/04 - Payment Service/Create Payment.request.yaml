@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{baseUrl}}/payments"
+method: POST
+headers:
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "orderId": "{{orderId}}",
+      "amount": 49.99,
+      "currency": "USD"
+    }
+order: 1000

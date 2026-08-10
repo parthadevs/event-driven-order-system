@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres_auth_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U auth_user -d auth_db"]
+      test: [ "CMD-SHELL", "pg_isready -U auth_user -d auth_db" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -34,7 +34,7 @@ services:
     volumes:
       - postgres_orders_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U orders_user -d orders_db"]
+      test: [ "CMD-SHELL", "pg_isready -U orders_user -d orders_db" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -56,7 +56,7 @@ services:
     volumes:
       - postgres_inventory_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U inventory_user -d inventory_db"]
+      test: [ "CMD-SHELL", "pg_isready -U inventory_user -d inventory_db" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -78,7 +78,7 @@ services:
     volumes:
       - postgres_payment_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U payment_user -d payment_db"]
+      test: [ "CMD-SHELL", "pg_isready -U payment_user -d payment_db" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -96,12 +96,35 @@ services:
     volumes:
       - postgres_notification_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U notification_user -d notification_db"]
+      test: [ "CMD-SHELL", "pg_isready -U notification_user -d notification_db" ]
       interval: 5s
       timeout: 5s
       retries: 5
     restart: unless-stopped
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --appendfsync
+      - everysec
+
+    ports:
+      - "6379:6379"
+
+    volumes:
+      - redis_data:/data
+
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
 volumes:
   postgres_auth_data:
@@ -109,3 +132,4 @@ volumes:
   postgres_inventory_data:
   postgres_payment_data:
   postgres_notification_data:
+  redis_data:

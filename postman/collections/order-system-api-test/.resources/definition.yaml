@@ -1,0 +1,30 @@
+$kind: collection
+name: order-system-api-test
+description: Central Postman collection for testing API Gateway and all
+  microservices. Update service URLs in the environment as services are
+  implemented.
+variables:
+  - key: baseUrl
+    value: http://localhost:3000
+  - key: authServiceUrl
+    value: http://localhost:3001
+  - key: ordersServiceUrl
+    value: http://localhost:3002
+  - key: inventoryServiceUrl
+    value: http://localhost:3003
+  - key: paymentServiceUrl
+    value: http://localhost:3004
+  - key: notificationServiceUrl
+    value: http://localhost:3005
+  - key: accessToken
+    value: ""
+  - key: refreshToken
+    value: ""
+  - key: userId
+    value: ""
+  - key: orderId
+    value: ""
+  - key: productId
+    value: ""
+  - key: paymentId
+    value: ""
