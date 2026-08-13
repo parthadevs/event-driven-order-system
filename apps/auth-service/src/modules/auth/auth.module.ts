@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { UsersModule } from "../users/users.module";
 import { ForgotPasswordUseCase } from "./application/use-cases/forgot-password.use-case";
 import { LoginUserUseCase } from "./application/use-cases/login-user.use-case";
 import { LogoutAllUseCase } from "./application/use-cases/logout-all.use-case";
@@ -9,7 +8,8 @@ import { ResetPasswordUseCase } from "./application/use-cases/reset-password.use
 import { VerifyEmailUseCase } from "./application/use-cases/verify-email.use-case";
 import { AuthServiceController } from "./presentation/controllers/auth.controller";
 import { CreateUserUseCase } from "./application/use-cases/create-user.use-case";
-
+import { PrismaUserRepository } from "../users/infrastructure/persistence/prisma-user.repository";
+import { PasswordHasher } from "../../security/password/password-hasher";
 
 @Module({
     providers: [
@@ -21,6 +21,8 @@ import { CreateUserUseCase } from "./application/use-cases/create-user.use-case"
         ResetPasswordUseCase,
         VerifyEmailUseCase,
         CreateUserUseCase,
+        PrismaUserRepository,
+        PasswordHasher
     ],
     controllers: [
         AuthServiceController

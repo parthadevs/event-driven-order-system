@@ -1,93 +1,49 @@
 import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
+import { HttpClientService } from '../../../infrastructure/http/http-client.service';
 import { ConfigService } from '@app/config';
 
 @Injectable()
 export class AuthClient {
+    private readonly baseUrl: string;
+
     constructor(
         private readonly configService: ConfigService,
-        private readonly httpService: HttpService
-
+        private readonly httpClient: HttpClientService
     ) {
+        this.baseUrl = this.configService.get<string>('AUTH_SERVICE_URL') || '';
+        console.log('auth client started', this.baseUrl);
+    }
 
-        console.log('auth client started', this.configService.get('AUTH_SERVICE_URL'));
+    private async post(endpoint: string, data: unknown) {
+        const response = await this.httpClient.post(`${this.baseUrl}${endpoint}`, data);
+        return response.data;
     }
 
     async register(data: unknown) {
-        const response = await firstValueFrom(
-            this.httpService.post(
-                `${this.configService.get('AUTH_SERVICE_URL')}/auth/register`,
-                data,
-            ),
-        );
-
-        return response.data;
+        return this.post('/auth/register', data);
     }
 
     async login(data: unknown) {
-        const response = await firstValueFrom(
-            this.httpService.post(
-                `${this.configService.get('AUTH_SERVICE_URL')}/auth/login`,
-                data,
-            ),
-        );
-
-        return response.data;
+        return this.post('/auth/login', data);
     }
 
     async refresh(data: unknown) {
-        const response = await firstValueFrom(
-            this.httpService.post(
-                `${this.configService.get('AUTH_SERVICE_URL')}/auth/refresh`,
-                data,
-            ),
-        );
-
-        return response.data;
+        return this.post('/auth/refresh', data);
     }
 
     async logout(data: unknown) {
-        const response = await firstValueFrom(
-            this.httpService.post(
-                `${this.configService.get('AUTH_SERVICE_URL')}/auth/logout`,
-                data,
-            ),
-        );
-
-        return response.data;
+        return this.post('/auth/logout', data);
     }
 
     async verifyEmail(data: unknown) {
-        const response = await firstValueFrom(
-            this.httpService.post(
-                `${this.configService.get('AUTH_SERVICE_URL')}/auth/verify-email`,
-                data,
-            ),
-        );
-
-        return response.data;
+        return this.post('/auth/verify-email', data);
     }
 
     async forgotPassword(data: unknown) {
-        const response = await firstValueFrom(
-            this.httpService.post(
-                `${this.configService.get('AUTH_SERVICE_URL')}/auth/forgot-password`,
-                data,
-            ),
-        );
-
-        return response.data;
+        return this.post('/auth/forgot-password', data);
     }
 
     async resetPassword(data: unknown) {
-        const response = await firstValueFrom(
-            this.httpService.post(
-                `${this.configService.get('AUTH_SERVICE_URL')}/auth/reset-password`,
-                data,
-            ),
-        );
-
-        return response.data;
+        return this.post('/auth/reset-password', data);
     }
 }
