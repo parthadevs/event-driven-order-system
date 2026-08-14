@@ -22,6 +22,15 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@auth-service/*": [
+        "apps/auth-service/src/*"
+      ],
+      "@shared": [
+        "libs/shared/src"
+      ],
+      "@shared/*": [
+        "libs/shared/src/*"
+      ],
       "@app/config": [
         "libs/config/src"
       ],

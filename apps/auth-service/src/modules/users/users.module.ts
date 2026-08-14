@@ -6,7 +6,6 @@ import { UsersController } from "./presentation/controllers/users.controller";
 import { UserRepository } from "./domain/repositories/user.repository";
 import { PrismaUserRepository } from "./infrastructure/persistence/prisma-user.repository";
 import { PrismaModule } from "../../infrastructure/persistence/prisma/prisma.module";
-import { ForgotPasswordUseCase } from "../auth/application/use-cases/forgot-password.use-case";
 
 @Module({
     imports: [PrismaModule],
@@ -21,8 +20,7 @@ import { ForgotPasswordUseCase } from "../auth/application/use-cases/forgot-pass
         DeleteUserUseCase,
         GetUserUseCase,
         UpdateUserUseCase,
-        UsersController,
-        ForgotPasswordUseCase
+        UsersController
     ],
     exports: [
         UserRepository

@@ -1,5 +1,6 @@
 import { User as PrismaUser } from "@prisma/client";
 import { UserEntity } from "../entities/user.entity";
+import { UserRole, UserStatus } from "../entities/user.entity";
 
 export class UserMapper {
 
@@ -10,8 +11,8 @@ export class UserMapper {
             passwordHash: prismaUser.passwordHash ?? undefined,
             firstName: prismaUser.firstName ?? undefined,
             lastName: prismaUser.lastName ?? undefined,
-            role: prismaUser.role as any,
-            status: prismaUser.status as any,
+            role: prismaUser.role as UserRole,
+            status: prismaUser.status as UserStatus,
             failedLoginAttempts: prismaUser.failedLoginAttempts,
             lockedUntil: prismaUser.lockedUntil ?? undefined,
             lastLoginAt: prismaUser.lastLoginAt ?? undefined,
@@ -25,12 +26,12 @@ export class UserMapper {
     static toPersistence(domainUser: UserEntity): any {
         return {
             id: domainUser.id,
-            email: domainUser.email.toLowerCase().trim(), // Normalize email
+            email: domainUser.email.toLowerCase().trim(),
             passwordHash: domainUser.passwordHash,
             firstName: domainUser.firstName,
             lastName: domainUser.lastName,
-            role: domainUser.role as any,
-            status: domainUser.status as any,
+            role: domainUser.role as UserRole,
+            status: domainUser.status as UserStatus,
             failedLoginAttempts: domainUser.failedLoginAttempts,
             lockedUntil: domainUser.lockedUntil,
             lastLoginAt: domainUser.lastLoginAt,

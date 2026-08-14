@@ -1,11 +1,16 @@
 import { PasswordResetTokenEntity } from "../entities/password-reset-token.entity";
+import { CreatePasswordResetTokenData } from "../types/password-reset-token.types";
 
 export abstract class PasswordResetTokenRepository {
-    abstract create(token: PasswordResetTokenEntity): Promise<PasswordResetTokenEntity>;
-    abstract findByTokenHash(tokenHash: string): Promise<PasswordResetTokenEntity | null>;
-    abstract findByUserId(userId: string): Promise<PasswordResetTokenEntity | null>;
-    abstract deleteByUserId(userId: string): Promise<void>;
-    abstract deleteExpired(): Promise<void>;
-    abstract markAsUsed(id: string): Promise<void>;
-    abstract deleteById(id: string): Promise<void>;
+    abstract create(
+        data: CreatePasswordResetTokenData,
+    ): Promise<PasswordResetTokenEntity>;
+
+    abstract findByToken(
+        tokenHash: string,
+    ): Promise<PasswordResetTokenEntity | null>;
+
+    abstract delete(
+        id: string,
+    ): Promise<void>;
 }

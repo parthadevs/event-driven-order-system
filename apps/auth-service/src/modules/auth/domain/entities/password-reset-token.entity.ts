@@ -1,21 +1,12 @@
-import { UserEntity } from "../../../users/domain/entities/user.entity";
 
 export class PasswordResetTokenEntity {
-    id: string;
-    userId: string;
-    user: UserEntity;
-    tokenHash: string;
-    expiresAt: Date;
-    usedAt: Date | null;
-    createdAt: Date;
+    constructor(
+        public readonly userId: string,
+        public readonly tokenHash: string,
+        public readonly expiresAt: Date,
+    ) { }
 
-    constructor(id: string, userId: string, user: UserEntity, tokenHash: string, expiresAt: Date, usedAt: Date | null, createdAt: Date) {
-        this.id = id;
-        this.userId = userId;
-        this.user = user;
-        this.tokenHash = tokenHash;
-        this.expiresAt = expiresAt;
-        this.usedAt = usedAt;
-        this.createdAt = createdAt;
+    isExpired(): boolean {
+        return this.expiresAt.getTime() <= Date.now();
     }
 }

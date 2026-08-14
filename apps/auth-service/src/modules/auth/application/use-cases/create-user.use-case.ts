@@ -1,20 +1,21 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { RegisterDto } from "../dto/register.dto";
-import { PrismaUserRepository } from "../../../users/infrastructure/persistence/prisma-user.repository";
-import { PasswordHasher } from "../../../../security/password/password-hasher";
-import { ConflictException } from "@nestjs/common";
-import { UserEntity } from "../../../users/domain/entities/user.entity";
+import { ConflictException, Injectable, Logger } from "@nestjs/common";
+import { UserRepository } from "@auth-service/modules/users/domain/repositories/user.repository";
+import { PasswordHasher } from "@auth-service/security/password/password-hasher";
+import { UserEntity } from "@auth-service/modules/users/domain/entities/user.entity";
+import { RegisterUserOutput } from "@auth-service/modules/auth/application/types/register.types";
+import { RegisterDto } from "@auth-service/modules/auth/application/dto/register.dto";
+import { ApiResponse } from "@shared/types/api.types";
 
 @Injectable()
 export class CreateUserUseCase {
     private readonly log = new Logger(CreateUserUseCase.name)
 
     constructor(
-        private readonly userRepository: PrismaUserRepository,
+        private readonly userRepository: UserRepository,
         private readonly passwordHasher: PasswordHasher,
     ) { }
 
-    async execute(input: RegisterDto) {
+    async execute(input: RegisterDto): Promise<ApiResponse<RegisterUserOutput>> {
 
         const existingUser = await this.userRepository.findByEmail(input.email);
         if (existingUser) {
@@ -37,13 +38,15 @@ export class CreateUserUseCase {
             success: true,
             code: 201,
             message: "User created successfully",
+            timestamp: new Date().toISOString(),
             data: {
                 id: user.id,
                 email: user.email,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 role: user.role,
-                createdAt: user.createdAt,
+                status: user.status,
+                createdAt: user.createdAt.toISOString(),
             }
         };
     }

@@ -1,37 +1,45 @@
 import { Injectable } from "@nestjs/common";
-import { PasswordResetTokenRepository } from "../../domain/repositories/password-reset-token.repository";
+import { PasswordResetTokenEntity } from "@auth-service/modules/auth/domain/entities/password-reset-token.entity";
+import { PasswordResetTokenRepository } from "@auth-service/modules/auth/domain/repositories/password-reset-token.repository";
+import { CreatePasswordResetTokenData } from "@auth-service/modules/auth/domain/types/password-reset-token.types";
+import { PasswordResetTokenMapper } from "@auth-service/modules/auth/domain/mapper/password-reset-token.mapper";
 import { PrismaService } from "apps/auth-service/src/infrastructure/persistence/prisma/prisma.service";
-import { PasswordResetTokenEntity } from "../../domain/entities/password-reset-token.entity";
 
 @Injectable()
 export class PrismaPasswordResetRepository implements PasswordResetTokenRepository {
     constructor(private readonly prisma: PrismaService) { }
 
-    async create(token: PasswordResetTokenEntity): Promise<PasswordResetTokenEntity> {
-        throw new Error("Method not implemented.");
+    async create(
+        data: CreatePasswordResetTokenData,
+    ): Promise<PasswordResetTokenEntity> {
+
+        const token =
+            await this.prisma.passwordResetToken.create({
+                data: {
+                    userId: data.userId,
+                    tokenHash: data.tokenHash,
+                    expiresAt: data.expiresAt,
+                },
+            });
+
+        return PasswordResetTokenMapper.toDomain(token);
     }
 
-    async findByTokenHash(tokenHash: string): Promise<PasswordResetTokenEntity | null> {
-        throw new Error("Method not implemented.");
+    async findByToken(tokenHash: string): Promise<PasswordResetTokenEntity | null> {
+        const token = await this.prisma.passwordResetToken.findUnique({
+            where: { tokenHash }
+        });
+
+        if (!token) {
+            return null;
+        }
+
+        return PasswordResetTokenMapper.toDomain(token);
     }
 
-    async findByUserId(userId: string): Promise<PasswordResetTokenEntity | null> {
-        throw new Error("Method not implemented.");
-    }
-
-    async deleteByUserId(userId: string): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-
-    async deleteExpired(): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-
-    async markAsUsed(id: string): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-
-    async deleteById(id: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    async delete(id: string): Promise<void> {
+        await this.prisma.passwordResetToken.delete({
+            where: { id }
+        });
     }
 }
