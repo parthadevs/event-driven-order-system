@@ -22,6 +22,9 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@api-gateway/*": [
+        "apps/api-gateway/src/*"
+      ],
       "@auth-service/*": [
         "apps/auth-service/src/*"
       ],

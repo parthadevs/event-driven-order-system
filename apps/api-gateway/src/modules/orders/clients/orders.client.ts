@@ -1,9 +1,9 @@
-import { Controller, Get, Post } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from '@app/config';
-import { HttpClientService } from "apps/api-gateway/src/infrastructure/http/http-client.service";
+import { HttpClientService } from "@api-gateway/infrastructure/http/http-client.service";
+import { CreateOrderRequestDto } from "../presentation/dto/create-order.request.dto";
 
-
-@Controller('orders')
+@Injectable()
 export class OrdersClient {
     private baseUrl: string;
 
@@ -11,28 +11,22 @@ export class OrdersClient {
         private readonly configService: ConfigService,
         private readonly httpClient: HttpClientService
     ) {
-        this.baseUrl = this.configService.get<string>('ORDER_SERVICE_URL') || '';
-        console.log('order client started', this.baseUrl);
+        this.baseUrl = this.configService.get<string>('ORDERS_SERVICE_URL') || '';
     }
 
-
-    @Post('/create')
-    async createOrder(data: any) {
-        return this.httpClient.post(`${this.baseUrl}/create`, data);
+    async createOrder(data: CreateOrderRequestDto) {
+        return this.httpClient.post(`${this.baseUrl}`, data);
     }
 
-    @Get('/get')
-    async getOrder() {
-        return this.httpClient.get(`${this.baseUrl}/get`);
+    async getOrders() {
+        return this.httpClient.get(`${this.baseUrl}`);
     }
 
-    @Get('/:orderId')
-    async getOrderById(data: any) {
-        return this.httpClient.get(`${this.baseUrl}/:orderId`);
+    async getOrderById(orderId: string) {
+        return this.httpClient.get(`${this.baseUrl}/${orderId}`);
     }
 
-    @Post('/:orderId/cancel')
-    async cancelOrder(data: any) {
-        return this.httpClient.post(`${this.baseUrl}/:orderId/cancel`, data);
+    async cancelOrder(orderId: string) {
+        return this.httpClient.post(`${this.baseUrl}/${orderId}/cancel`, {});
     }
 }
