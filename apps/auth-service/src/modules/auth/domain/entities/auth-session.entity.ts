@@ -1,6 +1,6 @@
 import { UserEntity } from "../../../users/domain/entities/user.entity";
 
-enum RevocationReason {
+export enum RevocationReason {
     LOGOUT = 'LOGOUT',
     ROTATED = 'ROTATED',
     PASSWORD_CHANGED = 'PASSWORD_CHANGED',

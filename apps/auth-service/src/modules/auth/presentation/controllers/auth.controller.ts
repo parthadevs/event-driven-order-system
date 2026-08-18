@@ -12,6 +12,9 @@ import { ForgotPasswordDto } from '../../application/dto/forgot-password.dto';
 import { ResetPasswordDto } from '../../application/dto/reset-password.dto';
 import { RegisterDto } from '../../application/dto/register.dto';
 import { CreateUserUseCase } from '../../application/use-cases/create-user.use-case';
+import { GetMeUseCase } from '../../application/use-cases/get-me.use-case';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { CurrentUser } from '../decorators/current-user.decorator';
 
 @Controller("auth")
 export class AuthServiceController {
@@ -24,6 +27,7 @@ export class AuthServiceController {
     private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
     private readonly verifyEmailUseCase: VerifyEmailUseCase,
     private readonly registerUserUseCase: CreateUserUseCase,
+    private readonly getMeUseCase: GetMeUseCase,
   ) { }
 
   // AUTH SERVICE
@@ -73,9 +77,9 @@ export class AuthServiceController {
   }
 
 
-  // @Get('me')
-  // @UseGuards(AuthGuard('jwt'))
-  // async me(@CurrentUser() user: client.User) {
-  //   return user;
-  // }
+  @Post('me')
+  async me(@Body() body: { token: string }) {
+    console.log('me body', body.token);
+    return this.getMeUseCase.execute(body);
+  }
 }

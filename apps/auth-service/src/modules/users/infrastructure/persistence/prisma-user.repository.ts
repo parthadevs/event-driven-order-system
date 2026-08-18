@@ -56,31 +56,6 @@ export class PrismaUserRepository implements UserRepository {
         return UserMapper.toDomain(user);
     }
 
-    // async createPasswordResetToken(token: string, userId: string, expiresIn: string): Promise<void> {
-    //     const expiresInMinutes = parseInt(expiresIn, 10) || 15;
-    //     const expiresAt = new Date(Date.now() + expiresInMinutes * 60 * 1000);
-
-    //     await this.prisma.passwordResetToken.create({
-    //         data: {
-    //             tokenHash: token,
-    //             userId: userId,
-    //             expiresAt: expiresAt,
-    //         },
-    //     });
-    // }
-
-    // async findPasswordResetToken(token: string): Promise<any | null> {
-    //     return this.prisma.passwordResetToken.findUnique({
-    //         where: { tokenHash: token },
-    //         select: {
-    //             id: true,
-    //             userId: true,
-    //             expiresAt: true,
-    //             // শুধু প্রয়োজনীয় ফিল্ড সিলেক্ট করা (Performance Optimization)
-    //         }
-    //     });
-    // }
-
     async update(user: UserEntity): Promise<UserEntity> {
         const rawData = UserMapper.toPersistence(user);
 

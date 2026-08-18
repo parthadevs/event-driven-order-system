@@ -25,6 +25,9 @@
       "@auth-service/*": [
         "apps/auth-service/src/*"
       ],
+      "@order-service/*": [
+        "apps/order-service/src/*"
+      ],
       "@shared": [
         "libs/shared/src"
       ],

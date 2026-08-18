@@ -26,8 +26,8 @@ services:
       - -c
       - wal_level=logical
     environment:
-      POSTGRES_DB: orders_db
-      POSTGRES_USER: orders_user
+      POSTGRES_DB: ${ORDERS_DB}
+      POSTGRES_USER: ${ORDERS_USER}
       POSTGRES_PASSWORD: ${ORDERS_DB_PASSWORD}
     ports:
       - "5432:5432"

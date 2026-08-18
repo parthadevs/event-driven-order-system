@@ -16,7 +16,7 @@ export class AuthClient {
 
     private async post(endpoint: string, data: unknown) {
         const response = await this.httpClient.post(`${this.baseUrl}${endpoint}`, data);
-        return response.data;
+        return response;
     }
 
     async register(data: unknown) {
@@ -29,6 +29,10 @@ export class AuthClient {
 
     async refresh(data: unknown) {
         return this.post('/auth/refresh', data);
+    }
+
+    async getMe(data: unknown) {
+        return this.post('/auth/me', data);
     }
 
     async logout(data: unknown) {

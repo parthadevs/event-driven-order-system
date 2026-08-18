@@ -7,6 +7,7 @@ export class AuthController {
         private readonly authClient: AuthClient,
     ) { }
 
+
     @Post('register')
     async register(@Body() body: any) {
         const response = await this.authClient.register(body);
@@ -18,6 +19,14 @@ export class AuthController {
         const response = await this.authClient.login(body);
         return response.data;
     }
+
+    @Post('me')
+    async getMe(@Body() body: any) {
+        console.log('me body', body);
+        const response = await this.authClient.getMe(body);
+        return response.data;
+    }
+
 
     @Post('refresh')
     async refresh(@Body() body: any) {

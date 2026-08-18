@@ -28,15 +28,12 @@ export class LoginUserUseCase {
 
         //1. Validate user
         const user = await this.userRepository.findByEmail(input.email);
-
         if (!user) {
-            this.log.error('User not found: ', input.email);
             throw new NotFoundException('User not found');
         }
+        const isPasswordValid = await this.passwordHasher.comparePassword(input.password, user.passwordHash);
 
-        const isPasswordValid = await this.passwordHasher.comparePassword(user.passwordHash, input.password);
         if (!isPasswordValid) {
-            this.log.error('Invalid password for user: ', input.email);
             throw new UnauthorizedException('Invalid password');
         }
 
@@ -49,13 +46,12 @@ export class LoginUserUseCase {
                 type: 'access',
             },
             {
-                secret: this.configService.get<string>('API_GATEWAY_JWT_SECRET'),
-                expiresIn: this.configService.get<string>('API_GATEWAY_JWT_EXPIRATION') || '15m',
+                secret: this.configService.get<string>('JWT_SECRET'),
+                expiresIn: this.configService.get<string>('JWT_EXPIRATION') || '15m',
             },
         );
-
         const refreshTokenValue = crypto.randomBytes(64).toString('hex');
-        
+
         const refreshToken = await this.jwtTokenService.generateToken(
             {
                 sub: user.id,
@@ -64,8 +60,8 @@ export class LoginUserUseCase {
                 jti: refreshTokenValue,
             },
             {
-                secret: this.configService.get<string>('API_GATEWAY_REFRESH_TOKEN_SECRET') || this.configService.get<string>('API_GATEWAY_JWT_SECRET'),
-                expiresIn: this.configService.get<string>('API_GATEWAY_REFRESH_TOKEN_EXPIRATION') || '30d',
+                secret: this.configService.get<string>('REFRESH_TOKEN_SECRET') || this.configService.get<string>('JWT_SECRET'),
+                expiresIn: this.configService.get<string>('REFRESH_TOKEN_EXPIRATION') || '30d',
             },
         );
 
@@ -73,8 +69,8 @@ export class LoginUserUseCase {
         //3. Save AuthSession
         const hashedRefreshToken = crypto.createHash("sha256").update(refreshToken).digest("hex");
         const familyId = crypto.randomUUID();
-        
-        const expiresInDays = parseInt(this.configService.get<string>('API_GATEWAY_REFRESH_TOKEN_EXPIRATION') || '30', 10);
+
+        const expiresInDays = parseInt(this.configService.get<string>('REFRESH_TOKEN_EXPIRATION') || '30', 10);
         const expiresAt = new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000);
 
         await this.authSessionRepository.create({

@@ -26,7 +26,22 @@ export class PrismaAuthSessionRepository implements AuthSessionRepository {
     }
 
     async update(authSession: AuthSessionEntity): Promise<AuthSessionEntity> {
-        throw new Error("Method not implemented.");
+        const updatedAuthSession = await this.prisma.authSession.update({
+            where: { id: authSession.id },
+            data: {
+                userId: authSession.userId,
+                tokenHash: authSession.tokenHash,
+                family: authSession.family,
+                expiresAt: authSession.expiresAt,
+                ipAddress: authSession.ipAddress,
+                userAgent: authSession.userAgent,
+                revokedAt: authSession.revokedAt,
+                revocationReason: authSession.revocationReason,
+                replacedTokenHash: authSession.replacedTokenHash,
+            }
+        });
+
+        return AuthSessionMapper.toDomain(updatedAuthSession);
     }
 
     async delete(id: string): Promise<void> {
@@ -34,23 +49,32 @@ export class PrismaAuthSessionRepository implements AuthSessionRepository {
     }
 
     async findById(id: string): Promise<AuthSessionEntity | null> {
-        throw new Error("Method not implemented.");
+        const session = await this.prisma.authSession.findUnique({
+            where: { id }
+        });
+
+        if (!session) return null;
+        return AuthSessionMapper.toDomain(session);
     }
 
     async findAll(): Promise<AuthSessionEntity[]> {
-        throw new Error("Method not implemented.");
+        const sessions = await this.prisma.authSession.findMany();
+        return sessions.map(session => AuthSessionMapper.toDomain(session));
     }
 
     async findByTokenHash(tokenHash: string): Promise<AuthSessionEntity | null> {
         const session = await this.prisma.authSession.findUnique({
             where: { tokenHash }
         });
-        
+
         if (!session) return null;
-        return AuthSessionMapper.toDomain(session as any);
+        return AuthSessionMapper.toDomain(session);
     }
 
     async findByFamily(family: string): Promise<AuthSessionEntity[]> {
-        throw new Error("Method not implemented.");
+        const sessions = await this.prisma.authSession.findMany({
+            where: { family }
+        });
+        return sessions.map(session => AuthSessionMapper.toDomain(session));
     }
 }
