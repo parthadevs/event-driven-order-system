@@ -1,0 +1,50 @@
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/@prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Inventory {
+  id               String   @id @default(uuid())
+
+  productId        String   @unique
+
+  quantity         Int      @default(0)
+  reservedQuantity Int      @default(0)
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  reservations     InventoryReservation[]
+}
+
+model InventoryReservation {
+  id          String   @id @default(uuid())
+
+  inventoryId String
+  orderId     String
+
+  quantity    Int
+
+  status      ReservationStatus @default(RESERVED)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  inventory   Inventory @relation(fields: [inventoryId],references: [id],onDelete: Cascade)
+
+  @@unique([inventoryId, orderId])
+  @@index([orderId])
+  @@index([status, createdAt])
+}
+
+enum ReservationStatus {
+  RESERVED
+  RELEASED
+  CONFIRMED
+  EXPIRED
+}
