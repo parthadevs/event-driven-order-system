@@ -22,6 +22,9 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@inventory-service/*": [
+        "apps/inventory-service/src/*"
+      ],
       "@api-gateway/*": [
         "apps/api-gateway/src/*"
       ],

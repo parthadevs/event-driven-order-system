@@ -1,8 +1,8 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { UserRepository } from "../../domain/repositories/user.repository";
-import { PrismaService } from "apps/auth-service/src/infrastructure/persistence/prisma/prisma.service";
-import { UserEntity } from "../../domain/entities/user.entity";
-import { UserMapper } from "../../domain/mappers/user.mapper";
+import { UserRepository } from "@auth-service/modules/users/domain/repositories/user.repository";
+import { PrismaService } from "@auth-service/infrastructure/persistence/prisma/prisma.service";
+import { UserEntity } from "@auth-service/modules/users/domain/entities/user.entity";
+import { UserMapper } from "@auth-service/modules/users/domain/mappers/user.mapper";
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
@@ -10,12 +10,10 @@ export class PrismaUserRepository implements UserRepository {
 
     constructor(
         private readonly prisma: PrismaService,
-        // private readonly redis: RedisService, // মিলিয়ন ইউজারের জন্য Redis প্রয়োজন
     ) { }
 
     async create(user: UserEntity): Promise<UserEntity> {
         const rawData = UserMapper.toPersistence(user);
-
         const newUser = await this.prisma.user.create({
             data: rawData,
         });

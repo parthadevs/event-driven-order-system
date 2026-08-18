@@ -6,7 +6,8 @@ import { ConfigModule as NgxConfigModule } from '@nestjs/config';
 @Global()
 @Module({
   imports: [NgxConfigModule.forRoot({
-    envFilePath: join(process.cwd(), '.env')
+    isGlobal: true,
+    envFilePath: '.env'
   })],
   providers: [ConfigService],
   exports: [ConfigService, NgxConfigModule],

@@ -48,8 +48,8 @@ services:
       - -c
       - wal_level=logical
     environment:
-      POSTGRES_DB: inventory_db
-      POSTGRES_USER: inventory_user
+      POSTGRES_DB: ${INVENTORY_DB}
+      POSTGRES_USER: ${INVENTORY_USER}
       POSTGRES_PASSWORD: ${INVENTORY_DB_PASSWORD}
     ports:
       - "5433:5432"
