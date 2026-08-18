@@ -32,6 +32,12 @@ export class HttpClientService {
         );
     }
 
+    async patch<T = any>(url: string, data: any): Promise<AxiosResponse<T>> {
+        return await firstValueFrom(
+            this.httpClientService.patch<T>(url, data).pipe(catchError(this.handleError))
+        );
+    }
+
     async delete<T = any>(url: string): Promise<AxiosResponse<T>> {
         return await firstValueFrom(
             this.httpClientService.delete<T>(url).pipe(catchError(this.handleError))

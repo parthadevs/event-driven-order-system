@@ -3,6 +3,8 @@ import { AuthController } from './modules/auth/presentation/auth.controller';
 import { AuthClient } from './modules/auth/clients/auth.client';
 import { OrdersController } from './modules/orders/presentation/orders.controller';
 import { OrdersClient } from './modules/orders/clients/orders.client';
+import { InventoryController } from './modules/inventory/presentation/inventory.controller';
+import { InventoryClient } from './modules/inventory/clients/inventory.client';
 import { HttpClientService } from './infrastructure/http/http-client.service';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
@@ -33,7 +35,7 @@ import { APP_GUARD } from '@nestjs/core';
       isGlobal: true,
     })],
 
-  controllers: [AuthController, OrdersController],
+  controllers: [AuthController, OrdersController, InventoryController],
   providers: [
     {
       provide: APP_GUARD,
@@ -41,6 +43,7 @@ import { APP_GUARD } from '@nestjs/core';
     },
     AuthClient,
     OrdersClient,
+    InventoryClient,
     HttpClientService,
     ConfigService
 

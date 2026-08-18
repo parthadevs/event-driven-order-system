@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from '@app/config';
 import { HttpClientService } from "@api-gateway/infrastructure/http/http-client.service";
-import { CreateOrderRequestDto } from "../presentation/dto/create-order.request.dto";
+import { CreateOrderRequestDto } from "@api-gateway/modules/orders/presentation/dto/create-order.request.dto";
 
 @Injectable()
 export class OrdersClient {
