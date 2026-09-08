@@ -7,82 +7,78 @@ import { EmailVerificationTokenEntity } from '../../domain/entities/email-verifi
 import { PrismaService } from 'apps/auth-service/src/infrastructure/persistence/prisma/prisma.service';
 
 @Injectable()
-export class PrismaEmailVerificationRepository
-    implements EmailVerificationTokenRepository {
-    constructor(
-        private readonly prisma: PrismaService,
-    ) { }
+export class PrismaEmailVerificationRepository implements EmailVerificationTokenRepository {
+  constructor(private readonly prisma: PrismaService) {}
 
-    async create(
-        token: EmailVerificationTokenEntity,
-    ): Promise<EmailVerificationTokenEntity> {
-        const record = await this.prisma.emailVerificationToken.create({
-            data: {
-                id: token.id,
-                userId: token.userId,
-                tokenHash: token.tokenHash,
-                expiresAt: token.expiresAt,
-                usedAt: token.usedAt,
-                createdAt: token.createdAt,
-            },
-        });
+  async create(
+    token: EmailVerificationTokenEntity,
+  ): Promise<EmailVerificationTokenEntity> {
+    const record = await this.prisma.emailVerificationToken.create({
+      data: {
+        id: token.id,
+        userId: token.userId,
+        tokenHash: token.tokenHash,
+        expiresAt: token.expiresAt,
+        usedAt: token.usedAt,
+        createdAt: token.createdAt,
+      },
+    });
 
-        return this.toDomain(record);
+    return this.toDomain(record);
+  }
+
+  async findByTokenHash(
+    tokenHash: string,
+  ): Promise<EmailVerificationTokenEntity | null> {
+    const record = await this.prisma.emailVerificationToken.findUnique({
+      where: {
+        tokenHash,
+      },
+    });
+
+    if (!record) {
+      return null;
     }
 
-    async findByTokenHash(
-        tokenHash: string,
-    ): Promise<EmailVerificationTokenEntity | null> {
-        const record =
-            await this.prisma.emailVerificationToken.findUnique({
-                where: {
-                    tokenHash,
-                },
-            });
+    return this.toDomain(record);
+  }
 
-        if (!record) {
-            return null;
-        }
+  async markAsUsed(id: string): Promise<void> {
+    await this.prisma.emailVerificationToken.update({
+      where: {
+        id,
+      },
+      data: {
+        usedAt: new Date(),
+      },
+    });
+  }
 
-        return this.toDomain(record);
-    }
+  async deleteExpired(): Promise<void> {
+    await this.prisma.emailVerificationToken.deleteMany({
+      where: {
+        expiresAt: {
+          lt: new Date(),
+        },
+      },
+    });
+  }
 
-    async markAsUsed(id: string): Promise<void> {
-        await this.prisma.emailVerificationToken.update({
-            where: {
-                id,
-            },
-            data: {
-                usedAt: new Date(),
-            },
-        });
-    }
-
-    async deleteExpired(): Promise<void> {
-        await this.prisma.emailVerificationToken.deleteMany({
-            where: {
-                expiresAt: {
-                    lt: new Date(),
-                },
-            },
-        });
-    }
-
-    private toDomain(record: {
-        id: string;
-        userId: string;
-        tokenHash: string;
-        usedAt: Date | null;
-        expiresAt: Date;
-        createdAt: Date;
-    }): EmailVerificationTokenEntity {
-        return new EmailVerificationTokenEntity(
-            record.id,
-            record.userId,
-            record.tokenHash,
-            record.expiresAt,
-            record.usedAt,
-            record.createdAt,
-        );
-    }
+  private toDomain(record: {
+    id: string;
+    userId: string;
+    tokenHash: string;
+    usedAt: Date | null;
+    expiresAt: Date;
+    createdAt: Date;
+  }): EmailVerificationTokenEntity {
+    return new EmailVerificationTokenEntity(
+      record.id,
+      record.userId,
+      record.tokenHash,
+      record.expiresAt,
+      record.usedAt,
+      record.createdAt,
+    );
+  }
 }

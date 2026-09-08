@@ -3,6 +3,8 @@ import { ConfigModule } from '@app/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { AuthHealthController } from './health/health.controller';
+
 @Module({
   imports: [
     ConfigModule,
@@ -10,17 +12,18 @@ import { AuthModule } from './modules/auth/auth.module';
     UsersModule,
     ClientsModule.register([
       {
-        name: "AUTH_SERVICE",
+        name: 'AUTH_SERVICE',
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: "auth-service",
-            brokers: ["localhost:9092"],
+            clientId: 'auth-service',
+            brokers: ['localhost:9092'],
           },
         },
       },
     ]),
   ],
+  controllers: [AuthHealthController],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

@@ -16,9 +16,8 @@ import { GetMeUseCase } from '../../application/use-cases/get-me.use-case';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { CurrentUser } from '../decorators/current-user.decorator';
 
-@Controller("auth")
+@Controller('auth')
 export class AuthServiceController {
-
   constructor(
     private readonly loginUserUseCase: LoginUserUseCase,
     private readonly refreshTokenUseCase: RefreshTokenUseCase,
@@ -28,7 +27,7 @@ export class AuthServiceController {
     private readonly verifyEmailUseCase: VerifyEmailUseCase,
     private readonly registerUserUseCase: CreateUserUseCase,
     private readonly getMeUseCase: GetMeUseCase,
-  ) { }
+  ) {}
 
   // AUTH SERVICE
 
@@ -75,7 +74,6 @@ export class AuthServiceController {
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return this.resetPasswordUseCase.execute(resetPasswordDto);
   }
-
 
   @Post('me')
   async me(@Body() body: { token: string }) {

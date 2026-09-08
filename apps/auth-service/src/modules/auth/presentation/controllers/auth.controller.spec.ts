@@ -11,7 +11,9 @@ describe('AuthServiceController', () => {
       providers: [AuthServiceService],
     }).compile();
 
-    authServiceController = app.get<AuthServiceController>(AuthServiceController);
+    authServiceController = app.get<AuthServiceController>(
+      AuthServiceController,
+    );
   });
 
   describe('root', () => {

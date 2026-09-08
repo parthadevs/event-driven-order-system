@@ -1,13 +1,12 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class DeleteUserUseCase {
-    private readonly log = new Logger(DeleteUserUseCase.name)
+  private readonly log = new Logger(DeleteUserUseCase.name);
 
+  async execute(id: string) {
+    this.log.log(`Request: Delete User ${id}`);
 
-    async execute(id: string) {
-        this.log.log(`Request: Delete User ${id}`);
-
-        return;
-    }
+    return;
+  }
 }
