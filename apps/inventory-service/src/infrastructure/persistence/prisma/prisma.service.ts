@@ -1,15 +1,33 @@
-import { Injectable, OnModuleInit, OnModuleDestroy, Logger, Optional } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleInit,
+  OnModuleDestroy,
+  Logger,
+  Optional,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '@prisma/client';
+
+interface PrismaQueryEvent {
+  query: string;
+  params: string;
+  duration: number;
+  timestamp: Date;
+}
 
 @Injectable()
-export class PrismaServiced extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+export class PrismaServiced
+  extends PrismaClient
+  implements OnModuleInit, OnModuleDestroy
+{
   private readonly logger = new Logger(PrismaServiced.name);
 
   constructor(@Optional() private config?: ConfigService) {
-    const connectionString = config?.get ? config.get<string>('INVENTORY_DATABASE_URL') : process.env.INVENTORY_DATABASE_URL;
+    const connectionString = config?.get
+      ? config.get<string>('INVENTORY_DATABASE_URL')
+      : process.env.INVENTORY_DATABASE_URL;
     const pool = new Pool({ connectionString });
     const adapter = new PrismaPg(pool);
 
@@ -26,10 +44,22 @@ export class PrismaServiced extends PrismaClient implements OnModuleInit, OnModu
 
   async onModuleInit() {
     await this.connectWithRetry();
+    this.registerQueryLogger();
   }
 
   async onModuleDestroy() {
     await this.$disconnect();
+  }
+
+  private registerQueryLogger(): void {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    (this as any).$on('query', (event: PrismaQueryEvent) => {
+      if (event.duration > 200) {
+        this.logger.warn(
+          `Slow query (${event.duration}ms): ${event.query} -- params: ${event.params}`,
+        );
+      }
+    });
   }
 
   private async connectWithRetry(): Promise<void> {
@@ -46,7 +76,7 @@ export class PrismaServiced extends PrismaClient implements OnModuleInit, OnModu
         if (attempt === maxRetries) {
           throw error;
         }
-        await new Promise(resolve => setTimeout(resolve, delay));
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
   }

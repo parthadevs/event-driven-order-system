@@ -1,9 +1,7 @@
-
 generator client {
   provider = "prisma-client-js"
   output   = "../node_modules/@prisma/client"
 }
-
 datasource db {
   provider = "postgresql"
 }
@@ -15,6 +13,8 @@ model Inventory {
 
   quantity         Int      @default(0)
   reservedQuantity Int      @default(0)
+
+  version          Int      @default(0)
 
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
@@ -32,6 +32,8 @@ model InventoryReservation {
 
   status      ReservationStatus @default(RESERVED)
 
+  expiresAt   DateTime?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -40,6 +42,7 @@ model InventoryReservation {
   @@unique([inventoryId, orderId])
   @@index([orderId])
   @@index([status, createdAt])
+  @@index([status, expiresAt])
 }
 
 enum ReservationStatus {
