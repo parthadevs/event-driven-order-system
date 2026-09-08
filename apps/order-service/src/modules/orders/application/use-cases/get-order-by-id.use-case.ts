@@ -4,18 +4,18 @@ import { OrderEntity } from '@order-service/modules/orders/domain/entities/order
 
 @Injectable()
 export class GetOrderByIdUseCase {
-    private readonly logger = new Logger(GetOrderByIdUseCase.name);
+  private readonly logger = new Logger(GetOrderByIdUseCase.name);
 
-    constructor(private readonly orderRepository: OrderRepository) { }
+  constructor(private readonly orderRepository: OrderRepository) {}
 
-    async execute(id: string): Promise<OrderEntity> {
-        this.logger.log(`Fetching order by id: ${id}`);
-        const order = await this.orderRepository.findById(id);
+  async execute(id: string): Promise<OrderEntity> {
+    this.logger.log(`Fetching order by id: ${id}`);
+    const order = await this.orderRepository.findById(id);
 
-        if (!order) {
-            throw new NotFoundException(`Order with id ${id} not found`);
-        }
-
-        return order;
+    if (!order) {
+      throw new NotFoundException(`Order with id ${id} not found`);
     }
+
+    return order;
+  }
 }

@@ -7,30 +7,30 @@ import { CreateOrderDto } from '@order-service/modules/orders/application/dto/cr
 
 @Controller()
 export class OrdersController {
-    constructor(
-        private readonly createOrderUseCase: CreateOrderUseCase,
-        private readonly getOrdersUseCase: GetOrdersUseCase,
-        private readonly getOrderByIdUseCase: GetOrderByIdUseCase,
-        private readonly cancelOrderUseCase: CancelOrderUseCase
-    ) { }
+  constructor(
+    private readonly createOrderUseCase: CreateOrderUseCase,
+    private readonly getOrdersUseCase: GetOrdersUseCase,
+    private readonly getOrderByIdUseCase: GetOrderByIdUseCase,
+    private readonly cancelOrderUseCase: CancelOrderUseCase,
+  ) {}
 
-    @Post()
-    async createOrder(@Body() createOrderDto: CreateOrderDto) {
-        return this.createOrderUseCase.execute(createOrderDto);
-    }
+  @Post()
+  async createOrder(@Body() createOrderDto: CreateOrderDto) {
+    return this.createOrderUseCase.execute(createOrderDto);
+  }
 
-    @Get()
-    async getOrders() {
-        return this.getOrdersUseCase.execute();
-    }
+  @Get()
+  async getOrders() {
+    return this.getOrdersUseCase.execute();
+  }
 
-    @Get(':orderId')
-    async getOrderById(@Param('orderId') orderId: string) {
-        return this.getOrderByIdUseCase.execute(orderId);
-    }
+  @Get(':orderId')
+  async getOrderById(@Param('orderId') orderId: string) {
+    return this.getOrderByIdUseCase.execute(orderId);
+  }
 
-    @Post(':orderId/cancel')
-    async cancelOrder(@Param('orderId') orderId: string) {
-        return this.cancelOrderUseCase.execute(orderId);
-    }
+  @Post(':orderId/cancel')
+  async cancelOrder(@Param('orderId') orderId: string) {
+    return this.cancelOrderUseCase.execute(orderId);
+  }
 }

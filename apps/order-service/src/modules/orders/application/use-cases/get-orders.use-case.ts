@@ -4,12 +4,12 @@ import { OrderEntity } from '@order-service/modules/orders/domain/entities/order
 
 @Injectable()
 export class GetOrdersUseCase {
-    private readonly logger = new Logger(GetOrdersUseCase.name);
+  private readonly logger = new Logger(GetOrdersUseCase.name);
 
-    constructor(private readonly orderRepository: OrderRepository) { }
+  constructor(private readonly orderRepository: OrderRepository) {}
 
-    async execute(): Promise<OrderEntity[]> {
-        this.logger.log(`Fetching all orders`);
-        return this.orderRepository.findAll();
-    }
+  async execute(): Promise<OrderEntity[]> {
+    this.logger.log(`Fetching all orders`);
+    return this.orderRepository.findAll();
+  }
 }

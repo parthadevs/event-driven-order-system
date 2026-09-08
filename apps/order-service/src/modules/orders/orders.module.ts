@@ -9,21 +9,18 @@ import { PrismaOrderRepository } from '@order-service/modules/orders/infrastruct
 import { PrismaService } from '@order-service/infrastructure/persistence/prisma/prisma.service';
 
 @Module({
-    controllers: [OrdersController],
-    providers: [
-        PrismaService,
-        {
-            provide: OrderRepository,
-            useClass: PrismaOrderRepository
-        },
-        CreateOrderUseCase,
-        GetOrdersUseCase,
-        GetOrderByIdUseCase,
-        CancelOrderUseCase
-    ],
-    exports: [
-        OrderRepository,
-        CreateOrderUseCase
-    ]
+  controllers: [OrdersController],
+  providers: [
+    PrismaService,
+    {
+      provide: OrderRepository,
+      useClass: PrismaOrderRepository,
+    },
+    CreateOrderUseCase,
+    GetOrdersUseCase,
+    GetOrderByIdUseCase,
+    CancelOrderUseCase,
+  ],
+  exports: [OrderRepository, CreateOrderUseCase],
 })
-export class OrdersModule { }
+export class OrdersModule {}
