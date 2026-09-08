@@ -5,11 +5,13 @@ import { ConfigModule as NgxConfigModule } from '@nestjs/config';
 
 @Global()
 @Module({
-  imports: [NgxConfigModule.forRoot({
-    isGlobal: true,
-    envFilePath: '.env'
-  })],
+  imports: [
+    NgxConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+  ],
   providers: [ConfigService],
   exports: [ConfigService, NgxConfigModule],
 })
-export class ConfigModule { }
+export class ConfigModule {}

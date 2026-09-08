@@ -25,6 +25,33 @@
       "@inventory-service/*": [
         "apps/inventory-service/src/*"
       ],
+      "@product-service/*": [
+        "apps/product-service/src/*"
+      ],
+      "@inventory-service/prisma-client": [
+        "apps/inventory-service/node_modules/.prisma/client/client.ts"
+      ],
+      "@inventory-service/prisma-enums": [
+        "apps/inventory-service/node_modules/.prisma/client/enums.ts"
+      ],
+      "@product-service/prisma-client": [
+        "apps/product-service/node_modules/.prisma/client/client.ts"
+      ],
+      "@product-service/prisma-enums": [
+        "apps/product-service/node_modules/.prisma/client/enums.ts"
+      ],
+      "@repo/kafka": [
+        "libs/kafka/src"
+      ],
+      "@repo/kafka/*": [
+        "libs/kafka/src/*"
+      ],
+      "@repo/events": [
+        "libs/events/src"
+      ],
+      "@repo/events/*": [
+        "libs/events/src/*"
+      ],
       "@api-gateway/*": [
         "apps/api-gateway/src/*"
       ],

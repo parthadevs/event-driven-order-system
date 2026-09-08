@@ -31,6 +31,8 @@
     "@nestjs/throttler": "^6.5.0",
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
+    "amqp-connection-manager": "^5.0.0",
+    "amqplib": "^2.0.1",
     "argon2": "^0.45.1",
     "axios": "^1.19.0",
     "bcrypt": "^6.0.0",
@@ -84,6 +86,9 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(uuid|kafkajs))"
+    ],
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
@@ -95,7 +100,15 @@
     ],
     "moduleNameMapper": {
       "^@app/config(|/.*)$": "<rootDir>/libs/config/src/$1",
-      "^@app/shared(|/.*)$": "<rootDir>/libs/shared/src/$1"
+      "^@app/shared(|/.*)$": "<rootDir>/libs/shared/src/$1",
+      "^@repo/kafka(|/.*)$": "<rootDir>/libs/kafka/src/$1",
+      "^@repo/events(|/.*)$": "<rootDir>/libs/events/src/$1",
+      "^@inventory-service/prisma-enums$": "<rootDir>/apps/inventory-service/node_modules/.prisma/client/enums.ts",
+      "^@inventory-service/prisma-client$": "<rootDir>/apps/inventory-service/node_modules/.prisma/client/client.ts",
+      "^@inventory-service/(.*)$": "<rootDir>/apps/inventory-service/src/$1",
+      "^@product-service/prisma-enums$": "<rootDir>/apps/product-service/node_modules/.prisma/client/enums.ts",
+      "^@product-service/prisma-client$": "<rootDir>/apps/product-service/node_modules/.prisma/client/client.ts",
+      "^@product-service/(.*)$": "<rootDir>/apps/product-service/src/$1"
     }
   }
 }
