@@ -13,57 +13,53 @@ import { ResetPasswordRequestDto } from '@api-gateway/modules/auth/presentation/
 
 @Controller('auth')
 export class AuthController {
-    constructor(
-        private readonly authClient: AuthClient,
-    ) { }
+  constructor(private readonly authClient: AuthClient) {}
 
+  @Post('register')
+  async register(@Body() body: RegisterRequestDto) {
+    const response = await this.authClient.register(body);
+    return response.data;
+  }
 
-    @Post('register')
-    async register(@Body() body: RegisterRequestDto) {
-        const response = await this.authClient.register(body);
-        return response.data;
-    }
+  @Post('login')
+  async login(@Body() body: LoginRequestDto) {
+    const response = await this.authClient.login(body);
+    return response.data;
+  }
 
-    @Post('login')
-    async login(@Body() body: LoginRequestDto) {
-        const response = await this.authClient.login(body);
-        return response.data;
-    }
+  @Post('me')
+  async getMe(@Body() body: MeRequestDto) {
+    const response = await this.authClient.getMe(body);
+    return response.data;
+  }
 
-    @Post('me')
-    async getMe(@Body() body: MeRequestDto) {
-        const response = await this.authClient.getMe(body);
-        return response.data;
-    }
+  @Post('refresh')
+  async refresh(@Body() body: RefreshRequestDto) {
+    const response = await this.authClient.refresh(body);
+    return response.data;
+  }
 
+  @Post('logout')
+  async logout(@Body() body: LogoutRequestDto) {
+    const response = await this.authClient.logout(body);
+    return response.data;
+  }
 
-    @Post('refresh')
-    async refresh(@Body() body: RefreshRequestDto) {
-        const response = await this.authClient.refresh(body);
-        return response.data;
-    }
+  @Post('verify-email')
+  async verifyEmail(@Body() body: VerifyEmailRequestDto) {
+    const response = await this.authClient.verifyEmail(body);
+    return response.data;
+  }
 
-    @Post('logout')
-    async logout(@Body() body: LogoutRequestDto) {
-        const response = await this.authClient.logout(body);
-        return response.data;
-    }
+  @Post('forgot-password')
+  async forgotPassword(@Body() body: ForgotPasswordRequestDto) {
+    const response = await this.authClient.forgotPassword(body);
+    return response.data;
+  }
 
-    @Post('verify-email')
-    async verifyEmail(@Body() body: VerifyEmailRequestDto) {
-        const response = await this.authClient.verifyEmail(body);
-        return response.data;
-    }
-
-    @Post('forgot-password')
-    async forgotPassword(@Body() body: ForgotPasswordRequestDto) {
-        const response = await this.authClient.forgotPassword(body);
-        return response.data;
-    }
-
-    @Post('reset-password')
-    async resetPassword(@Body() body: ResetPasswordRequestDto) {
-        const response = await this.authClient.resetPassword(body);
-        return response.data;
-    }
+  @Post('reset-password')
+  async resetPassword(@Body() body: ResetPasswordRequestDto) {
+    const response = await this.authClient.resetPassword(body);
+    return response.data;
+  }
 }
