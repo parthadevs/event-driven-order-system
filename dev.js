@@ -7,6 +7,7 @@ const services = [
     'notification-service',
     'order-service',
     'payment-service',
+    'product-service',
     'api-gateway',
 ];
 
